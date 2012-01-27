@@ -1,3 +1,4 @@
 Log4JFugue is a Java based system for converting any program's log file output to music.
 
 It has recently been rewritten into Scala and lives on GitHub.
+The original Java sources can be found at www.log4jfugue.org.
