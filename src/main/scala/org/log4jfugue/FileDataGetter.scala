@@ -1,13 +1,13 @@
 package org.log4jfugue
 import java.text.{ParseException, SimpleDateFormat}
-import org.scala_tools.subcut.inject.{BindingModule, Injectable}
+import org.scala_tools.subcut.inject.{BindingModule, Injectable, AutoInjectable}
 import io.Source
 
 /**
  * Gets messages from an existing log file; reads timestamps so as to play back the
  * messages in the same time sequence that they were originally written in.
  */
-class FileDataGetter()(override implicit val bindingModule: BindingModule) extends SimpleDataGetter() {
+class FileDataGetter() (override implicit val bindingModule: BindingModule) extends SimpleDataGetter {
   val fileName = injectIfBound[String] ('logFileName) {"foo"}
   val dateFormat = injectIfBound[String] ('dateFormat) {"yyyy/MM/dd HH:mm:ss.SSS"}
   val sdf = new SimpleDateFormat(dateFormat)
@@ -28,7 +28,7 @@ class FileDataGetter()(override implicit val bindingModule: BindingModule) exten
   def delayProcessing(line: String) {
     try {
       val msgDate = sdf.parse(line)
-      val timeDiff =
+      //val timeDiff =
       if(lastTime > 0) {
         val timeDiff = msgDate.getTime - lastTime
         if(timeDiff > 0) {

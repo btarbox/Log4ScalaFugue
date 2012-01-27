@@ -17,9 +17,8 @@ class L4JF (implicit val bindingModule: BindingModule)extends Thread with Inject
   messageProcessor.start()
   dataGetter.start()
 
-  Thread.sleep(5000)
   dataGetter.join()
   messageProcessor ! "exit"
-  soundBuilder.stop()
+  soundBuilder.keepRunning = false
   dataGetter.stop()
 }

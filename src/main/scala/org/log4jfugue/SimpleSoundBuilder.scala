@@ -1,8 +1,8 @@
 package org.log4jfugue
 import org.jfugue._
-import org.scala_tools.subcut.inject.{BindingModule, Injectable}
+import org.scala_tools.subcut.inject.{AutoInjectable, BindingModule, Injectable}
 
-class SimpleSoundBuilder()(implicit val bindingModule: BindingModule)extends Thread with Injectable with SoundBuilder {
+class SimpleSoundBuilder()extends Thread with AutoInjectable with SoundBuilder {
   def buildAndPlayMusic(messages: List[MessageMap], currentSecond: Accumulator) = {
     player.play(buildMusicString(messages, currentSecond))
   }

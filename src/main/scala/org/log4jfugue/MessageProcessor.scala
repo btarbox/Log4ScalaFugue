@@ -1,6 +1,6 @@
 package org.log4jfugue
 import actors.Actor
-import org.scala_tools.subcut.inject.{BindingModule, Injectable}
+import org.scala_tools.subcut.inject.{BindingModule, Injectable, AutoInjectable}
 
 /** Holds the association between log messages and instruments */
 case class MessageMap (logMessage: String, instrumentName: String, midiVoice: Int)
@@ -10,9 +10,9 @@ case class MessageMap (logMessage: String, instrumentName: String, midiVoice: In
  * messages from the DataGetter this class filters and increments message counts.
  * It is constructed with an implicit SubCut binding module.
  */
-class MessageProcessor()(implicit val bindingModule: BindingModule) extends Actor with Injectable {
-  val currentSecond = injectIfBound[Array[Int]] ('currentSecond) {Array[Int](0,0,0,0,0,0,0,0)}
+class MessageProcessor() extends Actor with AutoInjectable {
   val messages = injectIfBound[List[MessageMap]] ('instrumentMessages) {Nil}
+  val currentSecond = Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
   def act() {
     loop {
@@ -20,8 +20,9 @@ class MessageProcessor()(implicit val bindingModule: BindingModule) extends Acto
         case "exit"  => {println("MessageProcessor Exiting"); exit()}
         case "nextData" =>
           reply(currentSecond.clone())
-          for (x <- 1 to 7 ) currentSecond(x) = 0
+          for (x <- 1 to 15 ) currentSecond(x) = 0
         case msg:String =>
+          println("got msg " + msg)
           messages.filter(msg contains _.logMessage).foreach(m => currentSecond(m.midiVoice) += 1)
         case _ => println("unexpected message type")
       }

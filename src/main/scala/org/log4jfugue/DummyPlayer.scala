@@ -8,7 +8,7 @@ class DummyPlayer() extends Player {
     Thread.sleep(1000)
   }
   override def play(pattern: Pattern) : Unit = {
-   println("pretend to play " + pattern.getMusicString)
+   //println("pretend to play " + pattern.getMusicString)
    Thread.sleep(1000)
  }
 }

@@ -1,13 +1,13 @@
 package org.log4jfugue
-import org.scala_tools.subcut.inject.{BindingModule, Injectable}
 import org.jfugue._
 import java.lang.StringBuffer
+import org.scala_tools.subcut.inject.{AutoInjectable, BindingModule, Injectable}
 
 /**
  * Builds a set of rhythm layers, one per instrument, which are then combined
  * into a JFugue Pattern that is played.
  */
-class RhythmSoundBuilder()(implicit val bindingModule: BindingModule)extends Thread with Injectable with SoundBuilder {
+class RhythmSoundBuilder()extends Thread with AutoInjectable with SoundBuilder {
   def buildAndPlayMusic(messages: List[MessageMap], currentSecond: Accumulator) = {
     val rhythm = buildRhythm(messages, currentSecond)
     val pattern = rhythm.getPattern

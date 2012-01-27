@@ -1,9 +1,9 @@
 package org.log4jfugue
-import org.scala_tools.subcut.inject.BindingModule
+import org.scala_tools.subcut.inject.{BindingModule, Injectable, AutoInjectable}
 import java.net.ServerSocket
 import java.lang.Thread
 
-class SocketDataGetter()(override implicit val bindingModule: BindingModule) extends SimpleDataGetter() {
+class SocketDataGetter()(override implicit val bindingModule: BindingModule) extends SimpleDataGetter {
   val port = injectIfBound[Int]('port){4445}
 
   override def run() {

@@ -8,7 +8,7 @@ object Configuration extends NewBindingModule({ module =>
   import module._
 
   bind[Player]  toSingle new Player()
-  bind[Array[Int]] identifiedBy 'currentSecond toSingle Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+  //bind[Array[Int]] identifiedBy 'currentSecond toSingle Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
   bind[List[MessageMap]] identifiedBy  'instrumentMessages toSingle
     List[MessageMap] (MessageMap("stream create", "LOW_TOM", 1),
                       MessageMap("HttpService.getHttpGetResponse", "ACOUSTIC_SNARE", 2),
@@ -26,6 +26,6 @@ object Configuration extends NewBindingModule({ module =>
   //bind[String] identifiedBy 'logFileName toSingle "c:/Users/gqx487/Downloads/server.log.4/server.log"
   bind[String] identifiedBy 'dateFormat  toSingle  "yyyy-MM-dd HH:mm:ss,SSS"
   bind[MessageProcessor]  toSingle new MessageProcessor
-  bind[SimpleDataGetter] toSingle  new FileDataGetter()
-  bind[SoundBuilder] toSingle  new RhythmSoundBuilder()
+  bind[SimpleDataGetter] toSingle  new FileDataGetter
+  bind[SoundBuilder] toSingle  new RhythmSoundBuilder
 })
