@@ -9,9 +9,9 @@ object L4JF {
 }
 
 class L4JF (implicit val bindingModule: BindingModule)extends Thread with Injectable {
-  lazy val messageProcessor = injectIfBound[MessageProcessor] {new MessageProcessor()}
-  lazy val soundBuilder     = injectIfBound[SoundBuilder] {new SimpleSoundBuilder()}
-  lazy val dataGetter       = injectIfBound[SimpleDataGetter] { new FileDataGetter()}
+   lazy val messageProcessor = injectOptional[MessageProcessor].getOrElse(new MessageProcessor())
+   lazy val soundBuilder     = injectOptional[SoundBuilder].getOrElse(new SimpleSoundBuilder())
+   lazy val dataGetter       = injectOptional[SimpleDataGetter].getOrElse(new SimpleDataGetter())
 
   soundBuilder.start()
   messageProcessor.start()

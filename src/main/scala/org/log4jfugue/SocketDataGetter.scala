@@ -4,7 +4,7 @@ import java.net.ServerSocket
 import java.lang.Thread
 
 class SocketDataGetter()(override implicit val bindingModule: BindingModule) extends SimpleDataGetter {
-  val port = injectIfBound[Int]('port){4445}
+  val port = injectOptional[Int]('port).getOrElse(4445)
 
   override def run() {
     try {

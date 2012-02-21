@@ -3,12 +3,11 @@ import org.jfugue.Player
 import org.scala_tools.subcut.inject._
 
 /** Specifies the association between log messages and musical instruments */
-object Configuration extends NewBindingModule({ module =>
-  implicit val bindingModule = module
+object Configuration extends NewBindingModule({ implicit module =>
+  //implicit val bindingModule = module
   import module._
 
   bind[Player]  toSingle new Player()
-  //bind[Array[Int]] identifiedBy 'currentSecond toSingle Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
   bind[List[MessageMap]] identifiedBy  'instrumentMessages toSingle
     List[MessageMap] (MessageMap("stream create", "LOW_TOM", 1),
                       MessageMap("HttpService.getHttpGetResponse", "ACOUSTIC_SNARE", 2),
@@ -21,11 +20,14 @@ object Configuration extends NewBindingModule({ module =>
                       MessageMap("RtspClient", "HI_WOOD_BLOCK", 9)
     )
 
-  bind[String] identifiedBy 'logFileName toSingle "c:/Users/gqx487/Downloads/server.log_20110128"
-//  bind[String] identifiedBy 'logFileName toSingle "c:/Users/gqx487/Downloads/server.log_20110215"
-  //bind[String] identifiedBy 'logFileName toSingle "c:/Users/gqx487/Downloads/server.log.4/server.log"
+  bind[String] identifiedBy 'logFileName toSingle "c:/Users/gqx487/Downloads/server.log.4/server.log"
   bind[String] identifiedBy 'dateFormat  toSingle  "yyyy-MM-dd HH:mm:ss,SSS"
   bind[MessageProcessor]  toSingle new MessageProcessor
-  bind[SimpleDataGetter] toSingle  new FileDataGetter
+  //bind[SimpleDataGetter] toSingle  new FileDataGetter
+
+  bind[SimpleDataGetter] toSingle  new MongoDataGetter
+  bind[String] identifiedBy 'timeColumn toSingle "timestamp"
+  bind[String] identifiedBy 'msgColumn toSingle "msg"
+  
   bind[SoundBuilder] toSingle  new RhythmSoundBuilder
 })

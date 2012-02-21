@@ -7,9 +7,9 @@ import org.scala_tools.subcut.inject.{BindingModule, Injectable}
  */
 trait SoundBuilder extends Thread with Injectable {
   implicit val bindingModule: BindingModule
-  lazy val messageProcessor = injectIfBound[MessageProcessor] { new MessageProcessor }
-  lazy val player           = injectIfBound[Player] { new DummyPlayer}
-  lazy val messages         = injectIfBound[List[MessageMap]] ('instrumentMessages) {Nil}
+  lazy val messageProcessor = injectOptional[MessageProcessor].getOrElse(new MessageProcessor)
+  lazy val player           = injectOptional[Player].getOrElse( new DummyPlayer)
+  lazy val messages         = injectOptional[List[MessageMap]] ('instrumentMessages).getOrElse(Nil)
   type Accumulator = Array[Int]
   var keepRunning = true
 

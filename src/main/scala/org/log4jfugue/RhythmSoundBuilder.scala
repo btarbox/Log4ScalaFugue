@@ -8,10 +8,14 @@ import org.scala_tools.subcut.inject.{AutoInjectable, BindingModule, Injectable}
  * into a JFugue Pattern that is played.
  */
 class RhythmSoundBuilder()extends Thread with AutoInjectable with SoundBuilder {
+  var bla = 1
+  
   def buildAndPlayMusic(messages: List[MessageMap], currentSecond: Accumulator) = {
     val rhythm = buildRhythm(messages, currentSecond)
-    val pattern = rhythm.getPattern
+    val pattern: PatternInterface = rhythm.getPattern
     pattern.repeat(1)
+    println("play iteration " + bla + " " + pattern.toString())
+    bla = bla + 1
     player.play(pattern)  // blocks for one second
   }
 
@@ -19,7 +23,6 @@ class RhythmSoundBuilder()extends Thread with AutoInjectable with SoundBuilder {
     val rhythm = createInstrumentAliases()
     messages.filter(x => currentSecond(x.midiVoice) > 0).foreach{m =>
       val layerString = buildLayerString(m.midiVoice, currentSecond(m.midiVoice))
-      println("build layer string " + layerString)
       rhythm.setLayer(m.midiVoice, layerString)
     }
     rhythm.setLayer(15, "_._._._._._._.__") //creates a background beat so that user always hears something

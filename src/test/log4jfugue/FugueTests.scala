@@ -9,8 +9,8 @@ class FugueTests extends FunSuite with ShouldMatchers {
   val currentSecond = Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
   test ("Test file data getter") {
-    implicit val bindingModule =  new NewBindingModule({ module =>
-       implicit val bindingModule = module
+    implicit val bindingModule =  new NewBindingModule({ implicit module =>
+       //implicit val bindingModule = module
        import module._
        bind[Array[Int]] identifiedBy 'currentSecond toSingle Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
        bind[String] identifiedBy 'logFileName toSingle "c:/Users/gqx487/Downloads/server.log_20110128"

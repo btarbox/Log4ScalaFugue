@@ -13,7 +13,7 @@ import org.apache.log4j.spi._
  *  Sockets (TCP).
  */
 class L4JFSocketNode(socket: Socket)(override implicit val bindingModule: BindingModule) extends Runnable with Injectable {
-  val messageProcessor = injectIfBound[MessageProcessor] {new MessageProcessor}
+  val messageProcessor = injectOptional[MessageProcessor].getOrElse(new MessageProcessor)
   
   override def run() {
     try {
