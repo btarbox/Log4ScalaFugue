@@ -8,27 +8,37 @@ import java.io.File
 // dead simple log picker wrapper
 object SwingApp extends SimpleGUIApplication {
   def top = new MainFrame {
-    title = "Log File Picker"
-    val logPickButton = new Button { text = "Pick a Log file to process" }
-    val exitButton = new Button { text = "Exit" }
-    val logPicker = new FileChooser() { title = "Pick a log file to process" }
+    title = "Reactive Swing App"
+    val button = new Button { text = "Click me" }
+    val label = new Label {   text = "No button clicks registered"  }
+    val logPickButton = new Button { text = "Choose file" }
+    val logPicker = new FileChooser(null)
 
     contents = new BoxPanel(Orientation.Vertical) {
+      contents += button
+      contents += label
       contents += logPickButton
-      contents += exitButton
       border = Swing.EmptyBorder(30, 30, 10, 30)
     }
 
-    listenTo(exitButton)
-    reactions += { case ButtonClicked(b) => exit()}
+    listenTo(button)
+    var nClicks = 0
+    reactions += {
+      case ButtonClicked(b) =>
+      nClicks += 1
+      label.text = "Number of button clicks: "+ nClicks
+    }
 
     listenTo(logPickButton)
     reactions += {
       case ButtonClicked(b) =>
-      val result = logPicker.showOpenDialog(logPickButton)
+      println("got button press")
+      val result = logPicker.showOpenDialog(label)
       if(result == FileChooser.Result.Approve) { processLog(logPicker.selectedFile) }
     }
+
   }
+
 
   def processLog(selectedFile : File) {
     println(Some(selectedFile))

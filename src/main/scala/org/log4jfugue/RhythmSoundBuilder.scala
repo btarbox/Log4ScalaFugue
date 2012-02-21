@@ -11,6 +11,8 @@ class RhythmSoundBuilder()extends Thread with AutoInjectable with SoundBuilder {
   var bla = 1
   
   def buildAndPlayMusic(messages: List[MessageMap], currentSecond: Accumulator) = {
+    for (x <- 1 to 15 )print(currentSecond(x) + ",")
+    println(" ")
     val rhythm = buildRhythm(messages, currentSecond)
     val pattern: PatternInterface = rhythm.getPattern
     pattern.repeat(1)
@@ -35,6 +37,7 @@ class RhythmSoundBuilder()extends Thread with AutoInjectable with SoundBuilder {
     val beatsBetweenNotes : Double = 1.0 * beatsPerMeasure / count
     val buf = new StringBuffer((new StringBuilder(silentNote) * beatsPerMeasure))
     for(x <- 0 until count) buf.setCharAt(((x * beatsBetweenNotes).toInt), hexChar(layer))
+    println(buf.toString)
     buf.toString
   }
 

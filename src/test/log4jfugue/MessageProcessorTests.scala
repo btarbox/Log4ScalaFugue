@@ -51,6 +51,18 @@ class MessageProcessorTests extends FunSuite with ShouldMatchers {
     val cat  = x(1)
   }
 
+  test("stats") {
+    val source = fromFile("c:/Users/gqx487/Downloads/server.log.4/server.log")
+    val lines = source.getLines
+    val catList = for{oneLine <- lines
+                      tokens = oneLine.split(" ")
+                      if(tokens.size > 4)} yield tokens(4)
+    val foo = for(groupedList <- catList.toList.groupBy(x => x)) yield (groupedList._1, groupedList._2.size)
+    for(sorted <- foo.toList.sortBy(_._2).reverse) {
+      println(sorted._1 + ":" + sorted._2)
+    }
+  }
+
   test("messing around") {
     val source = fromFile("file.txt")
     val lines = source.getLines
@@ -63,7 +75,7 @@ class MessageProcessorTests extends FunSuite with ShouldMatchers {
   }
 
   def stringToTupple(oneLine:String) =  {val z = oneLine.split(' '); (z(0).toInt, z(1)) }
-  test("messing around") {
+  test("messing around2") {
     val lines = fromFile("file.txt").getLines
     val tuppleList = for(oneLine <- lines) yield {val z = oneLine.split(' '); (z(0).toInt, z(1)) }
     for(groupedList <- tuppleList.toList.groupBy(oneTuple => oneTuple._2)) {

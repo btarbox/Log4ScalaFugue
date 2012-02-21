@@ -8,7 +8,7 @@ class RhythmSoundBuilderTests extends FunSuite with ShouldMatchers {
   type Accumulator = Array[Int]
   val currentSecond = Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
-  /*
+
   test ("Test jfugue stop after 17 bug") {
     val bindingModule =  new NewBindingModule({ implicit module =>
        import module._
@@ -26,7 +26,7 @@ class RhythmSoundBuilderTests extends FunSuite with ShouldMatchers {
     val pattern: PatternInterface = rhythm.getPattern
     pattern.repeat(1)
     for(y <- 1 to 30) {
-      val player = new Player()
+      val player = new Player(true, true)
       val sequence = player.getSequence(pattern);
       for(x <- 1 to 10) {
         println("play iteration " + x + " " + pattern.toString())
@@ -34,7 +34,7 @@ class RhythmSoundBuilderTests extends FunSuite with ShouldMatchers {
       }
     }
   }
-*/
+
   test ("Test Rhythm SimpleSoundBuilder") {
     val bindingModule =  new NewBindingModule({ implicit module =>
        import module._

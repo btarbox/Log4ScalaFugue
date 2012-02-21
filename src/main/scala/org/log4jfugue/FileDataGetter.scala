@@ -29,7 +29,6 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
   def delayProcessing(line: String) {
     try {
       val msgDate = sdf.parse(line)
-      //val timeDiff =
       if(lastTime > 0) {
         val timeDiff = msgDate.getTime - lastTime
         if(timeDiff > 0) {
