@@ -8,8 +8,7 @@ class SimpleSoundBuilderTest extends FunSuite with ShouldMatchers {
   type Accumulator = Array[Int]
   val currentSecond = Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
   test ("Test SimpleSoundBuilder") {
-    val bindingModule =  new NewBindingModule({ module =>
-       implicit val bindingModule = module
+    val bindingModule =  new NewBindingModule({ implicit module =>
        import module._
        bind[Array[Int]] identifiedBy 'currentSecond toSingle Array[Int](0,0,0,0,0,0,0,0)
     })

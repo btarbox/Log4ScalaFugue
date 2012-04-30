@@ -8,8 +8,9 @@ import io.Source
  * messages in the same time sequence that they were originally written in.
  */
 class FileDataGetter() (override implicit val bindingModule: BindingModule) extends SimpleDataGetter {
-  val fileName = injectIfBound[String] ('logFileName) {"foo"}
-  val dateFormat = injectIfBound[String] ('dateFormat) {"yyyy/MM/dd HH:mm:ss.SSS"}
+  lazy val dateFormat = injectOptional[String]('dateFormat).getOrElse("yyXXXXXXyy/MM/dd HH:mm:ss.SSS")
+  lazy val fileName   = injectOptional[String]('logFileName).getOrElse("no-file-bound")
+  println("fileName:" + fileName + ", format:" + dateFormat)
   val sdf = new SimpleDateFormat(dateFormat)
   private var lastTime = 0L
 
@@ -28,7 +29,6 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
   def delayProcessing(line: String) {
     try {
       val msgDate = sdf.parse(line)
-      //val timeDiff =
       if(lastTime > 0) {
         val timeDiff = msgDate.getTime - lastTime
         if(timeDiff > 0) {

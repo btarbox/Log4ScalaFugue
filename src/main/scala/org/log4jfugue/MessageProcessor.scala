@@ -11,7 +11,7 @@ case class MessageMap (logMessage: String, instrumentName: String, midiVoice: In
  * It is constructed with an implicit SubCut binding module.
  */
 class MessageProcessor() extends Actor with AutoInjectable {
-  val messages = injectIfBound[List[MessageMap]] ('instrumentMessages) {Nil}
+  val messages = injectOptional[List[MessageMap]] ('instrumentMessages).getOrElse(Nil)
   val currentSecond = Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
   def act() {
@@ -22,8 +22,8 @@ class MessageProcessor() extends Actor with AutoInjectable {
           reply(currentSecond.clone())
           for (x <- 1 to 15 ) currentSecond(x) = 0
         case msg:String =>
-          println("got msg " + msg)
-          messages.filter(msg contains _.logMessage).foreach(m => currentSecond(m.midiVoice) += 1)
+           //messages.filter(msg contains _.logMessage).foreach(m => currentSecond(m.midiVoice) += 1)
+           for(m <- messages; if msg contains m.logMessage) currentSecond(m.midiVoice) += 1
         case _ => println("unexpected message type")
       }
     }
