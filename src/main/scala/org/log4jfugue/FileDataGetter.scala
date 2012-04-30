@@ -26,6 +26,9 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
     }
   }
 
+  /* Lsttime is currently done using an initial value of zero and uses two if statements. Thats a java style.
+  Change it to an Option of long with an initial value of None. Then use a comprehension to avoid
+  both if statements.*/
   def delayProcessing(line: String) {
     try {
       val msgDate = sdf.parse(line)

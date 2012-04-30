@@ -1,4 +1,25 @@
 package org.log4jfugue
+/*
+ * Log4JFugue - Application Sonification
+ * Copyright (C) 2011-2012  Brian Tarbox
+ *
+ * http://www.log4jfugue.org
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ *
+ */
 import org.scalatest.matchers.ShouldMatchers
 import org.scala_tools.subcut.inject._
 import org.scalatest.{FunSuite, SeveredStackTraces}
@@ -51,7 +72,7 @@ class MessageProcessorTests extends FunSuite with ShouldMatchers {
     val cat  = x(1)
   }
 
-  test("stats") {
+  test("create list of message sources and counts, i.e. find the popular messages") {
     val source = fromFile("c:/Users/gqx487/Downloads/server.log.4/server.log")
     val lines = source.getLines
     val catList = for{oneLine <- lines
@@ -74,7 +95,8 @@ class MessageProcessorTests extends FunSuite with ShouldMatchers {
     source close
   }
 
-  def stringToTupple(oneLine:String) =  {val z = oneLine.split(' '); (z(0).toInt, z(1)) }
+  //def stringToTupple(oneLine:String) =  {val z = oneLine.split(' '); (z(0).toInt, z(1)) }
+
   test("messing around2") {
     val lines = fromFile("file.txt").getLines
     val tuppleList = for(oneLine <- lines) yield {val z = oneLine.split(' '); (z(0).toInt, z(1)) }
