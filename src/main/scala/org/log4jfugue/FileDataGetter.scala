@@ -12,7 +12,7 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
   lazy val fileName   = injectOptional[String]('logFileName).getOrElse("no-file-bound")
   println("fileName:" + fileName + ", format:" + dateFormat)
   val sdf = new SimpleDateFormat(dateFormat)
-  private var lastTime = 0L
+  private var lastTime: Option[Long] = None
 
   override def run() {
     val source = Source.fromFile(fileName)
@@ -26,20 +26,17 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
     }
   }
 
-  /* Lsttime is currently done using an initial value of zero and uses two if statements. Thats a java style.
-  Change it to an Option of long with an initial value of None. Then use a comprehension to avoid
-  both if statements.*/
+
   def delayProcessing(line: String) {
     try {
       val msgDate = sdf.parse(line)
-      if(lastTime > 0) {
-        val timeDiff = msgDate.getTime - lastTime
-        if(timeDiff > 0) {
-          Thread.sleep(timeDiff)
-          //println(line)
-        }
-      }
-      lastTime = max(lastTime, msgDate.getTime)
+
+     for (last <- lastTime;
+          timeDiff = msgDate.getTime - last;
+          if (timeDiff > 0)) {
+            Thread.sleep(timeDiff)
+     }
+     lastTime = max(msgDate.getTime, lastTime)
     } catch  {
       case ex: NumberFormatException => println("got NFE"); Thread.sleep(1)
       case badDate: ParseException => // ignorable exception, means a multi-line message
@@ -47,5 +44,10 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
     }
   }
 
-  def max(time1: Long, time2: Long) = {if (time1 > time2) time1 else time2}
+  def max(time1: Long, time2: Option[Long]) : Option[Long] = {
+    time2 match {
+      case None => Some(time1)
+      case _ => if(time1 > time2.get) Some(time1) else time2
+    }
+  }
 }
