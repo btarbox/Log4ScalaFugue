@@ -1,7 +1,7 @@
 package org.log4jfugue
 /*
  * Log4JFugue - Application Sonification
- * Copyright (C) 2011-2012  Brian Tarbox
+ * Copyright (C) 2011-2016  Brian Tarbox
  *
  * http://www.log4jfugue.org
  *
@@ -20,22 +20,22 @@ package org.log4jfugue
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-import actors.Actor
-import org.scala_tools.subcut.inject.{AutoInjectable, BindingModule, Injectable}
+import akka.actor._
+
 
 /** Base class that provides hard coded set of messages */
-class SimpleDataGetter() extends Thread with AutoInjectable {
-  val messageProcessor = injectOptional[MessageProcessor].getOrElse(new MessageProcessor)
-  val sampleData       = injectOptional[List[String]].getOrElse(List("stream create\n", "stream create\n", "other message\n", "stream delete\n"))
+class SimpleDataGetter() extends Thread  {
+  // val messageProcessor = injectOptional[MessageProcessor].getOrElse(new MessageProcessor)
+  val sampleData       = List("stream create\n", "stream create\n", "other message\n", "stream delete\n")
   var keepRunning = true
 
   override def run() {
     println("sample data is " + sampleData)
     for(msg:String <- sampleData) {
-      messageProcessor ! msg
+      L4JFCloud.messageProcessor ! msg
     }
     Thread.sleep(1000)
-    messageProcessor ! "exit"
+   // L4JFCloud.messageProcessor ! "exit"
   }
 }
 

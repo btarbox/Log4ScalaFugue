@@ -1,15 +1,15 @@
 package org.log4jfugue
 import java.text.{ParseException, SimpleDateFormat}
-import org.scala_tools.subcut.inject.{BindingModule, Injectable, AutoInjectable}
 import io.Source
+import akka.actor._
 
 /**
  * Gets messages from an existing log file; reads timestamps so as to play back the
  * messages in the same time sequence that they were originally written in.
  */
-class FileDataGetter() (override implicit val bindingModule: BindingModule) extends SimpleDataGetter {
-  lazy val dateFormat = injectOptional[String]('dateFormat).getOrElse("yyXXXXXXyy/MM/dd HH:mm:ss.SSS")
-  lazy val fileName   = injectOptional[String]('logFileName).getOrElse("no-file-bound")
+class FileDataGetter() /*(override implicit val bindingModule: BindingModule)*/ extends SimpleDataGetter {
+  lazy val dateFormat = "yyyy-MM-dd HH:mm:ss,SSS"
+  lazy val fileName   = L4JFCloud.fileDataGetterFile
   println("fileName:" + fileName + ", format:" + dateFormat)
   val sdf = new SimpleDateFormat(dateFormat)
   private var lastTime: Option[Long] = None
@@ -18,7 +18,7 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
     val source = Source.fromFile(fileName)
     try {
       source getLines() foreach {line =>
-        messageProcessor ! line
+        L4JFCloud.messageProcessor ! line
         delayProcessing(line)
       }
     }finally {
@@ -40,7 +40,7 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
     } catch  {
       case ex: NumberFormatException => println("got NFE"); Thread.sleep(1)
       case badDate: ParseException => // ignorable exception, means a multi-line message
-      case bad => println("some other exception: " + bad)
+      case x:Any => println("some other exception: " + x)
     }
   }
 
@@ -50,4 +50,9 @@ class FileDataGetter() (override implicit val bindingModule: BindingModule) exte
       case _ => if(time1 > time2.get) Some(time1) else time2
     }
   }
+}
+
+class Foo {
+  // val messageProcessor2: Actor = new MessageProcessor
+  L4JFCloud.messageProcessor ! "bla"
 }

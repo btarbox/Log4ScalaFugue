@@ -20,7 +20,6 @@ package org.log4jfugue
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-import org.scala_tools.subcut.inject.{BindingModule, Injectable}
 import org.jfugue.{Rhythm, Pattern, Player}
 
 class DummyPlayer() extends Player {

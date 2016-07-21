@@ -1,7 +1,7 @@
 package org.log4jfugue
 /*
  * Log4JFugue - Application Sonification
- * Copyright (C) 2011-2012  Brian Tarbox
+ * Copyright (C) 2011-2016  Brian Tarbox
  *
  * http://www.log4jfugue.org
  *
@@ -22,13 +22,12 @@ package org.log4jfugue
  */
 import org.jfugue._
 import java.lang.StringBuffer
-import org.scala_tools.subcut.inject.{AutoInjectable, BindingModule, Injectable}
 
 /**
  * Builds a set of rhythm layers, one per instrument, which are then combined
  * into a JFugue Pattern that is played.
  */
-class RhythmSoundBuilder()extends Thread with AutoInjectable with SoundBuilder {
+class RhythmSoundBuilder()extends Thread with SoundBuilder {
   var bla = 1
   
   def buildAndPlayMusic(messages: List[MessageMap], currentSecond: Accumulator) = {

@@ -1,7 +1,7 @@
 package org.log4jfugue
 /*
  * Log4JFugue - Application Sonification
- * Copyright (C) 2011-2012  Brian Tarbox
+ * Copyright (C) 2011-2016  Brian Tarbox
  *
  * http://www.log4jfugue.org
  *
@@ -20,12 +20,11 @@ package org.log4jfugue
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-import org.scala_tools.subcut.inject.{BindingModule, Injectable, AutoInjectable}
 import java.net.ServerSocket
 import java.lang.Thread
 
-class SocketDataGetter()(override implicit val bindingModule: BindingModule) extends SimpleDataGetter {
-  val port = injectOptional[Int]('port).getOrElse(4445)
+class SocketDataGetter() extends SimpleDataGetter {
+  val port = L4JFCloud.SocketDataGetterPort
 
   override def run() {
     try {
@@ -35,7 +34,7 @@ class SocketDataGetter()(override implicit val bindingModule: BindingModule) ext
       thread.start()  // listen for log4j connection
       thread.join()
     }catch {
-      case _ => println("got exception")
+      case _ : Throwable => println("got exception")
     }
   }
 }

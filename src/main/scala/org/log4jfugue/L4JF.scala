@@ -20,26 +20,34 @@ package org.log4jfugue
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-import org.scala_tools.subcut.inject.{BindingModule, Injectable, AutoInjectable}
+import akka.actor.ActorSystem
+import org.jfugue.Player
 
-object L4JF {
-  def main(args: Array[String]) {
-    implicit val bindingModule = Configuration  // makes subcut magic work
-    val l4jf = new L4JF
-  }
+
+object L4JFCloud {
+  private val system = ActorSystem("Log4ScalaFugueCloud")
+  val messageProcessor = system.actorOf(MessageProcessor.props(1), "MessageProcessor")
+  val soundBuilder = new RhythmSoundBuilder
+  val dataGetter = new FileDataGetter
+  val fileDataGetterFile = "foo.dat"
+  val SocketDataGetterPort = 4445
+  val player = new Player(true, true)
+  val messages = List[MessageMap] (MessageMap("stream create", "LOW_TOM", 1),
+    MessageMap("PumpReservations.reserveStreamBandwidth", "ACOUSTIC_SNARE", 2),
+    MessageMap("exception getting pump", "HAND_CLAP", 3),
+    MessageMap("ContentAwarePumpSelector.useExistingAffinity", "HI_BONGO", 4),
+    MessageMap("NgnEventisPlayListRtspFlowHandler", "COWBELL", 5),
+    MessageMap("GenericDAO", "LOW_CONGA", 6),
+    MessageMap("StreamFacade.createStream", "TAMBOURINE", 7),
+    MessageMap("CdnDAO.updatePlaycount", "MARACAS", 8),
+    MessageMap("StreamFacade.destroyStream", "HI_WOOD_BLOCK", 9))
+
+//  dataGetter.join()
+//  messageProcessor ! "exit"
+//  soundBuilder.keepRunning = false
+//  dataGetter.stop()
+
 }
+class L4JFCloud {
 
-class L4JF (implicit val bindingModule: BindingModule)extends Thread with Injectable {
-   lazy val messageProcessor = injectOptional[MessageProcessor].getOrElse(new MessageProcessor())
-   lazy val soundBuilder     = injectOptional[SoundBuilder].getOrElse(new SimpleSoundBuilder())
-   lazy val dataGetter       = injectOptional[SimpleDataGetter].getOrElse(new SimpleDataGetter())
-
-  soundBuilder.start()
-  messageProcessor.start()
-  dataGetter.start()
-
-  dataGetter.join()
-  messageProcessor ! "exit"
-  soundBuilder.keepRunning = false
-  dataGetter.stop()
 }

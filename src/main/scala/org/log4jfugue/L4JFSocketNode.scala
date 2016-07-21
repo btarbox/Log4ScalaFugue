@@ -20,7 +20,6 @@ package org.log4jfugue
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-import org.scala_tools.subcut.inject.{Injectable, BindingModule}
 import java.net.{SocketException, Socket}
 import java.io.{IOException, EOFException, BufferedInputStream, ObjectInputStream}
 import org.apache.log4j.spi._
@@ -33,8 +32,8 @@ import org.apache.log4j.spi._
  *  Read {@link LoggingEvent} objects sent from a remote client using
  *  Sockets (TCP).
  */
-class L4JFSocketNode(socket: Socket)(override implicit val bindingModule: BindingModule) extends Runnable with Injectable {
-  val messageProcessor = injectOptional[MessageProcessor].getOrElse(new MessageProcessor)
+class L4JFSocketNode(socket: Socket)  extends Runnable {
+  val messageProcessor = L4JFCloud.messageProcessor
   
   override def run() {
     try {
@@ -49,7 +48,7 @@ class L4JFSocketNode(socket: Socket)(override implicit val bindingModule: Bindin
       case e:EOFException    => println("got EOF exception")
       case e:SocketException => println("got Socket exception")
       case e:IOException     => println("got IOException exception")
-      case _                 => println("other exception")
+      case _ : Throwable     => println("other exception")
     }
   }
 }

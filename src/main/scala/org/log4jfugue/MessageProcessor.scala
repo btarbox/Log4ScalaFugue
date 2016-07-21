@@ -1,7 +1,7 @@
 package org.log4jfugue
 /*
  * Log4JFugue - Application Sonification
- * Copyright (C) 2011-2012  Brian Tarbox
+ * Copyright (C) 2011-2016  Brian Tarbox
  *
  * http://www.log4jfugue.org
  *
@@ -20,33 +20,47 @@ package org.log4jfugue
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
-import actors.Actor
-import org.scala_tools.subcut.inject.{BindingModule, Injectable, AutoInjectable}
+import akka.actor._
 
 /** Holds the association between log messages and instruments */
 case class MessageMap (logMessage: String, instrumentName: String, midiVoice: Int)
+
+object MessageProcessor {
+  case class ExitMsg(msg: String)
+  case object NextData
+  case class Msg(msg: String)
+
+  def props(id: Int): Props = Props(new MessageProcessor(1))
+}
 
 /**
  * The only class to manipulate the message accumulator.  In response to Actor
  * messages from the DataGetter this class filters and increments message counts.
  * It is constructed with an implicit SubCut binding module.
  */
-class MessageProcessor() extends Actor with AutoInjectable {
-  val messages = injectOptional[List[MessageMap]] ('instrumentMessages).getOrElse(Nil)
+class MessageProcessor(id: Int) extends Actor /*with AutoInjectable*/ with ActorLogging {
+  import MessageProcessor._
+  val messages = L4JFCloud.messages
   val currentSecond = Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 
-  def act() {
-    loop {
-      react {
-        case "exit"  => {println("MessageProcessor Exiting"); exit()}
-        case "nextData" =>
-          reply(currentSecond.clone())
-          for (x <- 1 to 15 ) currentSecond(x) = 0
-        case msg:String =>
-           //messages.filter(msg contains _.logMessage).foreach(m => currentSecond(m.midiVoice) += 1)
-           for(m <- messages; if msg contains m.logMessage) currentSecond(m.midiVoice) += 1
-        case _ => println("unexpected message type")
-      }
+  override def receive:Receive = {
+    case ExitMsg => {
+      println("Message Processor got ExitMsg")
+      System.exit(1)
     }
+
+    case NextData => {
+      println("Message Processor got NextData")
+      sender() ! currentSecond.clone()
+      for (x <- 1 to 15) currentSecond(x) = 0
+    }
+
+    case Msg(msg) => {
+      println("Message Processor got Msg")
+      for (m <- messages; if msg contains m.logMessage) currentSecond(m.midiVoice) += 1
+    }
+
+    case x: Any => println(s"Message Processor got unexpected message ${x}")
   }
+
 }

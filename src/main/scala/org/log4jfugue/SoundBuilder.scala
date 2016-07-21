@@ -20,24 +20,35 @@ package org.log4jfugue
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
+import scala.concurrent.Await
+
 import org.jfugue.Player
-import org.scala_tools.subcut.inject.{BindingModule, Injectable}
+import akka.actor._
+import akka.pattern.ask
+import scala.concurrent.duration._
 
 /** This is the base trait that the various SoundBuilders extend.
  *  It captures the logic of getting the accumulator data from the MessageProcessor
  */
-trait SoundBuilder extends Thread with Injectable {
-  implicit val bindingModule: BindingModule
-  lazy val messageProcessor = injectOptional[MessageProcessor].getOrElse(new MessageProcessor)
-  lazy val player           = injectOptional[Player].getOrElse( new DummyPlayer)
-  lazy val messages         = injectOptional[List[MessageMap]] ('instrumentMessages).getOrElse(Nil)
+trait SoundBuilder extends Thread  {
+  // implicit val bindingModule: BindingModule
+  lazy val messageProcessor = L4JFCloud.messageProcessor
+  lazy val player           = L4JFCloud.player
+  lazy val messages         = L4JFCloud.messages
   type Accumulator = Array[Int]
   var keepRunning = true
+  val timeout = 4L
+  implicit val askTime = akka.util.Timeout(timeout, SECONDS)
 
   override def run {
     println("constructed messages as:" + messages)
     while(keepRunning) {
-      val currentSecond = messageProcessor !? ("nextData") match { case e: Accumulator => e}
+      val currentSecondFuture = messageProcessor ?  MessageProcessor.NextData
+      val currentSecond = Await.result(currentSecondFuture, 2 seconds) match {
+        case e: Accumulator => e
+      }
+
+      //val currentSecond = messageProcessor ? ("nextData") match { case e: Accumulator => e}
       buildAndPlayMusic(messages, currentSecond)
     }
   }
