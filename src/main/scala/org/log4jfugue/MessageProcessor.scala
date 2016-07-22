@@ -36,9 +36,8 @@ object MessageProcessor {
 /**
  * The only class to manipulate the message accumulator.  In response to Actor
  * messages from the DataGetter this class filters and increments message counts.
- * It is constructed with an implicit SubCut binding module.
  */
-class MessageProcessor(id: Int) extends Actor /*with AutoInjectable*/ with ActorLogging {
+class MessageProcessor(id: Int) extends Actor with ActorLogging {
   import MessageProcessor._
   val messages = L4JFCloud.messages
   val currentSecond = Array[Int](0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)

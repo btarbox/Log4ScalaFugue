@@ -28,16 +28,16 @@ import java.lang.StringBuffer
  * into a JFugue Pattern that is played.
  */
 class RhythmSoundBuilder()extends Thread with SoundBuilder {
-  var bla = 1
-  
+  var playIterationCounter = 1
+
   def buildAndPlayMusic(messages: List[MessageMap], currentSecond: Accumulator) = {
     for (x <- 1 to 15 )print(currentSecond(x) + ",")
     println(" ")
     val rhythm = buildRhythm(messages, currentSecond)
     val pattern: PatternInterface = rhythm.getPattern
     pattern.repeat(1)
-    println("play iteration " + bla + " " + pattern.toString())
-    bla = bla + 1
+    println("play iteration " + playIterationCounter + " " + pattern.toString())
+    playIterationCounter = playIterationCounter + 1
     player.play(pattern)  // blocks for one second
   }
 

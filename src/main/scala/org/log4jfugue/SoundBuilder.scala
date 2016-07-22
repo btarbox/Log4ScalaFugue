@@ -29,9 +29,13 @@ import scala.concurrent.duration._
 
 /** This is the base trait that the various SoundBuilders extend.
  *  It captures the logic of getting the accumulator data from the MessageProcessor
+ *  In the AWS distributed model this class runs locally while MessageProcessor runs on the cloud
+ *  We will use ActorSelection to find the cloud based MessageProcessor (how will it find us????)
+ *  Maybe the cloud MP doesn't need to find us...it just responds to our messages!  The drawback
+ *  will be that only one client at a time could work as every NextData message will clear the
+ *  accumulators on the MP but maybe thats ok....
  */
 trait SoundBuilder extends Thread  {
-  // implicit val bindingModule: BindingModule
   lazy val messageProcessor = L4JFCloud.messageProcessor
   lazy val player           = L4JFCloud.player
   lazy val messages         = L4JFCloud.messages

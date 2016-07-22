@@ -1,7 +1,7 @@
 package org.log4jfugue
 /*
  * Log4JFugue - Application Sonification
- * Copyright (C) 2011-2012  Brian Tarbox
+ * Copyright (C) 2011-2016  Brian Tarbox
  *
  * http://www.log4jfugue.org
  *

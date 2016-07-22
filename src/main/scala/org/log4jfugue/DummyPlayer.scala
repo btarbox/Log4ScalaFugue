@@ -1,7 +1,7 @@
 package org.log4jfugue
 /*
  * Log4JFugue - Application Sonification
- * Copyright (C) 2011-2012  Brian Tarbox
+ * Copyright (C) 2011-2016  Brian Tarbox
  *
  * http://www.log4jfugue.org
  *
@@ -27,10 +27,6 @@ class DummyPlayer() extends Player {
     println("pretend to play " + musicString)
     Thread.sleep(1000)
   }
-//  override def play(pattern: Pattern) : Unit = {
-//   //println("pretend to play " + pattern.getMusicString)
-//   Thread.sleep(1000)
-// }
 
   override def play(rhythm: Rhythm) : Unit = {
    //println("pretend to play " + pattern.getMusicString)
