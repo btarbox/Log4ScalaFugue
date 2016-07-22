@@ -1,13 +1,16 @@
 package org.log4jfugue
 import java.text.{ParseException, SimpleDateFormat}
+
 import io.Source
+
 import akka.actor._
+import org.log4jfugue.MessageProcessor.Msg
 
 /**
  * Gets messages from an existing log file; reads timestamps so as to play back the
  * messages in the same time sequence that they were originally written in.
  */
-class FileDataGetter() /*(override implicit val bindingModule: BindingModule)*/ extends SimpleDataGetter {
+class FileDataGetter()  extends SimpleDataGetter {
   lazy val dateFormat = "yyyy-MM-dd HH:mm:ss,SSS"
   lazy val fileName   = L4JFCloud.fileDataGetterFile
   println("fileName:" + fileName + ", format:" + dateFormat)
@@ -15,10 +18,11 @@ class FileDataGetter() /*(override implicit val bindingModule: BindingModule)*/ 
   private var lastTime: Option[Long] = None
 
   override def run() {
+    println(s"FileDataGetter about to open ${fileName}")
     val source = Source.fromFile(fileName)
     try {
       source getLines() foreach {line =>
-        L4JFCloud.messageProcessor ! line
+        L4JFCloud.messageProcessor ! Msg(line)
         delayProcessing(line)
       }
     }finally {
@@ -52,7 +56,7 @@ class FileDataGetter() /*(override implicit val bindingModule: BindingModule)*/ 
   }
 }
 
-class Foo {
-  // val messageProcessor2: Actor = new MessageProcessor
-  L4JFCloud.messageProcessor ! "bla"
-}
+//class Foo {
+//  // val messageProcessor2: Actor = new MessageProcessor
+//  L4JFCloud.messageProcessor ! "bla"
+//}

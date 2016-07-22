@@ -1,7 +1,7 @@
 package org.log4jfugue
 /*
  * Log4JFugue - Application Sonification
- * Copyright (C) 2011-2012  Brian Tarbox
+ * Copyright (C) 2011-2016  Brian Tarbox
  *
  * http://www.log4jfugue.org
  *
@@ -20,19 +20,20 @@ package org.log4jfugue
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
  */
+import scala.io.StdIn
+
 import akka.actor.ActorSystem
 import org.jfugue.Player
 
 
-object L4JFCloud {
+object L4JFCloud extends App {
+  println("L4JFCloud initializing")
   private val system = ActorSystem("Log4ScalaFugueCloud")
-  val messageProcessor = system.actorOf(MessageProcessor.props(1), "MessageProcessor")
-  val soundBuilder = new RhythmSoundBuilder
-  val dataGetter = new FileDataGetter
-  val fileDataGetterFile = "foo.dat"
+  val fileDataGetterFile = "/Users/btarbox/projects2/Log4ScalaFugue/sample.log"
   val SocketDataGetterPort = 4445
   val player = new Player(true, true)
-  val messages = List[MessageMap] (MessageMap("stream create", "LOW_TOM", 1),
+  val messages = List[MessageMap] (
+    MessageMap("stream create", "LOW_TOM", 1),
     MessageMap("PumpReservations.reserveStreamBandwidth", "ACOUSTIC_SNARE", 2),
     MessageMap("exception getting pump", "HAND_CLAP", 3),
     MessageMap("ContentAwarePumpSelector.useExistingAffinity", "HI_BONGO", 4),
@@ -42,12 +43,20 @@ object L4JFCloud {
     MessageMap("CdnDAO.updatePlaycount", "MARACAS", 8),
     MessageMap("StreamFacade.destroyStream", "HI_WOOD_BLOCK", 9))
 
+  val messageProcessor = system.actorOf(MessageProcessor.props(1), "MessageProcessor")
+  val soundBuilder = new RhythmSoundBuilder
+  val dataGetter = new FileDataGetter
+
+  soundBuilder.start()
+  dataGetter.start()
+
 //  dataGetter.join()
 //  messageProcessor ! "exit"
 //  soundBuilder.keepRunning = false
 //  dataGetter.stop()
+  println("L4JFCloud done initializing")
 
-}
-class L4JFCloud {
-
+  println("main app starting....")
+  StdIn.readLine()  // placeholder for system to keep running
+  println("main app exiting....")
 }
