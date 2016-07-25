@@ -36,13 +36,15 @@ import scala.concurrent.duration._
  *  accumulators on the MP but maybe thats ok....
  */
 trait SoundBuilder extends Thread  {
-  lazy val messageProcessor = L4JFCloud.messageProcessor
-  lazy val player           = L4JFCloud.player
-  lazy val messages         = L4JFCloud.messages
+  val messageProcessor = L4JFCloud.messageProcessor
+  val player           = L4JFCloud.player
+  val messages         = L4JFCloud.messages
   type Accumulator = Array[Int]
   var keepRunning = true
   val timeout = 4L
   implicit val askTime = akka.util.Timeout(timeout, SECONDS)
+  println(s"after SoundBuilder constructor, messages = ${messages}")
+
 
   override def run {
     println("constructed messages as:" + messages)

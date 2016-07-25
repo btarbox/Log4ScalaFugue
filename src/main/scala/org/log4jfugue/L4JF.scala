@@ -43,6 +43,8 @@ object L4JFCloud extends App {
     MessageMap("CdnDAO.updatePlaycount", "MARACAS", 8),
     MessageMap("StreamFacade.destroyStream", "HI_WOOD_BLOCK", 9))
 
+  println(s"in L4JFCloud constructor, messages = ${messages}")
+
   val messageProcessor = system.actorOf(MessageProcessor.props(1), "MessageProcessor")
   val soundBuilder = new RhythmSoundBuilder
   val dataGetter = new FileDataGetter

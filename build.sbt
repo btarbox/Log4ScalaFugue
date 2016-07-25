@@ -1,3 +1,4 @@
+
 name := "log4scalafugue"
 
 version := "2.0"
@@ -35,3 +36,4 @@ libraryDependencies += "com.typesafe.akka" %% "akka-http-testkit" % "2.4.7"
 libraryDependencies <<= (scalaVersion, libraryDependencies) { (ver, deps) =>
   deps :+ "org.scala-lang" % "scala-compiler" % ver
 }
+
