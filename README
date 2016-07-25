@@ -1,14 +1,14 @@
 Log4JFugue is a Java based system for converting any program's log file output to music.
-
-It has recently been rewritten into Scala and lives on GitHub.
 The original Java sources can be found at www.log4jfugue.org.
+
+The project was rewritten in Scala some years ago, using the Actor system which was the precursor to Akka.
+It was just recently updated to run with Akka and a more modern version of Scala.
+
+The next improvement which is scheduled for Summer 2016 is to add support for Akka remoting so as to be able to run a server in the AWS cloud which will talk with a client program running locally.
 
 Recent additions to the system include a DataGetter for a MongoDB.  This uses configurable
 column names so it should work with any Mongo database that includes timestamp and
 message columns.
-
-It also a very rudimentary Swing base GUI that allows a user to select a log file
-for processing.  Need to add the ability to stop the processing of a log file.
 
 Have also written a method to process the statistics about a log file so as to see
 which log messages are most frequent.  Need to hook that into the GUI.
